@@ -6,6 +6,7 @@ const authRouter = require("./routes/authRouter")
 const dashboardRouter = require("./routes/dashboardRouter")
 // const userLogged = require("./middlewares/userLogged")
 const path = require('path');
+const socket = require('socket.io');
 const connection = require('./database/connection');
 
 app.get('/', (req, res) => {
@@ -42,7 +43,14 @@ app.use('/dashboard', dashboardRouter);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+// Configuración de socket.io
+const server = require('http').createServer(app);
+const io = socket(server);
+require('./socket')(io);
+
 // Iniciar el servidor
-app.listen(3000, () => {
+server.listen(3000, () => {
     console.log("Servidor Express escuchando en el puerto 3000");
 })
+
+module.exports = app;

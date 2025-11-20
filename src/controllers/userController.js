@@ -7,12 +7,19 @@ exports.getAllUsers = async (req, res) => {
 }
 
 exports.getUser = async (req, res) => {
-    const id = req.params.id;
-    const user = await userService.findById(id);
-    if(!user){
-        return res.status(404).json({"message": "Usuario no encontrado"});
+    try {
+        const id = req.params.id;
+        const user = await userService.findById(id);
+
+        if (!user) {
+            return res.status(404).json({ message: "Usuario no encontrado" });
+        }
+
+        res.status(200).json(user);
+
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
     }
-    res.status(200).json(user);
 }
 
 exports.createUser = async (req, res) => {
